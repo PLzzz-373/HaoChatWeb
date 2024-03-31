@@ -2,7 +2,6 @@ import type { LoginInitResType, WsReqMsgContentType } from '@/utils/wsType'
 import { WsRequestMsgType, WsResponseMessageType } from '@/utils/wsType'
 import { LoginStatus, useWsLoginStore } from '@/stores/ws'
 import { useUserStore } from '@/stores/user'
-import { ElMessage } from 'element-plus'
 
 
 class WS{
@@ -115,7 +114,11 @@ class WS{
         break
       }
       case WsResponseMessageType.TokenExpired:{
-        ElMessage.error("登录失效，请重新登录")
+        userStore.isSign = false
+        userStore.userInfo = {}
+        localStorage.removeItem('USER_INFO')
+        localStorage.removeItem('TOKEN')
+        loginStore.loginStatus = LoginStatus.Init
         break
       }
       default:{

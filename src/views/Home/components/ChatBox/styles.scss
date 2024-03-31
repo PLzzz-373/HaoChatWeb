@@ -1,0 +1,99 @@
+.chat-box {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  padding: 20px;
+}
+
+.chat-wrapper {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px;
+}
+
+.chat {
+  height: 100%;
+  flex: 1;
+  border-radius: 8px;
+  background-color: var(--color-gray-bg);
+  display: flex;
+  flex-direction: column;
+}
+
+
+.chat-msg-send {
+  padding: 10px 20px 20px;
+  font-size: 0;
+  display: flex;
+  align-items: center;
+
+  .chat-not-login-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    user-select: none;
+  }
+
+  .login-link {
+    margin-left: 4px;
+    margin-right: 4px;
+    color: var(--color-primary);
+  }
+
+  .msg-input-wrapper {
+    position: relative;
+    flex: 1;
+    margin: 0;
+    margin-right: 20px;
+  }
+
+  .msg-input {
+    width: 100%;
+    height: 40px;
+    background-color: #424656;
+    border-radius: 15px;
+    border: none;
+    padding: 10px;
+    box-sizing: border-box;
+    transition: .2s;
+    font-size: 16px;
+    color: #fff;
+
+    &:focus {
+      outline: 2px solid #2287e1;
+    }
+  }
+
+  .send-button {
+    background-color: var(--color-primary);
+    border: 0;
+    padding: 0;
+    transition: .3s;
+    box-shadow: 0 0 5px 0 #08f;
+    color: #fff;
+    height: 40px;
+    width: 40px;
+    border-radius: 12px;
+    font-size: 24px;
+    padding-top: 4px;
+    cursor: pointer;
+
+    &:hover {
+      box-shadow: 0 0 10px 0 #08f;
+    }
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+  }
+}

@@ -1,11 +1,12 @@
 import { defineStore } from 'pinia'
-import { useRoute } from 'vue-router'
+import { ref } from 'vue'
 
 
 export const pageSize = 20
-let isFirstInit = false
 
-export const useChatStore =defineStore('chat',()={
-  const route = useRoute()
-  const cachedStore = useCacheStore()
+export const useChatStore = defineStore('chat',()=>{
+  //消息列表滚动到底部事件
+  const chatListToBottomAction = ref<()=>void>()
+  //消息列表
+  const chatMessageList = ref<MessageItemType[]>
 })

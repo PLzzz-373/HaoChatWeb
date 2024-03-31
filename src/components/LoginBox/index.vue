@@ -55,6 +55,6 @@ watchEffect(()=>{
   </ElDialog>
 </template>
 
-<style lang="scss" src="styles.scss" scoped>
+<style lang="scss" src="./styles.scss" scoped>
 
 </style>
