@@ -20,8 +20,8 @@ const timeToStr = (time: number) => {
   return gapDay < 2
     ? `${gapDay === 1 ? '昨天 ' : ''}${sendTime.format('HH:mm')}`
     : isLastWeek
-      ? sendTime.format('YYYY-MM-DD HH:mm')
-      : dayjs(sendTime).format('dddd HH:mm')
+    ? sendTime.format('YYYY-MM-DD HH:mm')
+    : dayjs(sendTime).format('dddd HH:mm')
 }
 
 // 超过5分钟，或者超过20条消息，就添加展示时间
@@ -83,10 +83,10 @@ export const formatTimestamp = (timestamp: number): string => {
  * @returns boolean 输入时间是否间隔 now 间隔值以上。
  */
 export const isDiffNow = ({
-                            time,
-                            unit,
-                            diff,
-                          }: {
+  time,
+  unit,
+  diff,
+}: {
   unit: OpUnitType
   time: ConfigType
   diff: number

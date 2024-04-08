@@ -1,19 +1,22 @@
-import type { CacheBadgeItem, CacheUserItem } from '@/services/types'
+import { reactive, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { useGlobalStore } from '@/stores/global'
-import { computed, reactive } from 'vue'
 import apis from '@/services/apis'
+import { useGlobalStore } from '@/stores/global'
+import type { CacheUserItem, CacheBadgeItem } from '@/services/types'
 import { isDiffNow10Min } from '@/utils/computedTime'
 
-
 export type BaseUserItem = Pick<CacheUserItem, 'uid' | 'avatar' | 'name'>
+
 export const useCachedStore = defineStore(
   'cached',
-  ()=>{
+
+  () => {
     const globalStore = useGlobalStore()
-    const userCachedList = reactive<Record<number,Partial<CacheUserItem>>>({})
+    const userCachedList = reactive<Record<number, Partial<CacheUserItem>>>({})
     const badgeCachedList = reactive<Record<number, Partial<CacheBadgeItem>>>({})
+
     const currentRoomId = computed(() => globalStore.currentSession.roomId)
+
     const atUsersMap = reactive<Record<number, BaseUserItem[]>>({ [currentRoomId.value]: [] }) // 消息Map
 
     const currentAtUsersList = computed({
@@ -31,6 +34,7 @@ export const useCachedStore = defineStore(
         atUsersMap[currentRoomId.value] = val
       },
     })
+
     /** 批量获取用户详细信息 */
     const getBatchUserInfo = async (uids: number[]) => {
       // 没有 lastModifyTime 的要更新，lastModifyTime 距离现在 10 分钟已上的也要更新
@@ -82,6 +86,31 @@ export const useCachedStore = defineStore(
           }),
       )
     }
+
+    /** 房间内的所有群成员列表-@专用 */
+    const initAllUserBaseInfo = async () => {
+      if (localStorage.getItem('IS_INIT_USER_BASE') === null) {
+        // await getAllUserBaseInfo()
+        const data = await apis
+          .getAllUserBaseInfo({ params: { roomId: currentRoomId.value } })
+          .send()
+        data?.forEach((item) => (userCachedList[item.uid] = item))
+        localStorage.setItem('IS_INIT_USER_BASE', 'true')
+      }
+    }
+
+    const getGroupAtUserBaseInfo = async () => {
+      if (currentRoomId.value === 1) return
+      const data = await apis.getAllUserBaseInfo({ params: { roomId: currentRoomId.value } }).send()
+      currentAtUsersList.value = data
+    }
+
+    // 根据用户名关键字过滤用户，
+    // FIXME 是否需要过滤自己
+    const filterUsers = (searchKey: string) => {
+      return currentAtUsersList.value?.filter((item) => item.name?.startsWith(searchKey))
+    }
+
     /**
      * 通过用户ID列表获取用户基本信息
      * @param uidList
@@ -89,13 +118,18 @@ export const useCachedStore = defineStore(
     const filterUsersByUidList = (uidList: number[]) => {
       return currentAtUsersList.value.filter((user) => uidList.includes(user.uid))
     }
-    return{
+
+    return {
       userCachedList,
       badgeCachedList,
       getBatchUserInfo,
       getBatchBadgeInfo,
+      initAllUserBaseInfo,
+      filterUsers,
+      getGroupAtUserBaseInfo,
+      currentAtUsersList,
       filterUsersByUidList,
     }
   },
-  {persist:true}
+  { persist: true },
 )

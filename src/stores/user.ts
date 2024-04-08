@@ -1,24 +1,21 @@
-import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { UserInfoType } from '@/services/types'
 import apis from '@/services/apis'
+import { defineStore } from 'pinia'
+import type { UserInfoType } from '@/services/types'
 
-
-export const useUserStore = defineStore('user',()=>{
-  const userInfo =  ref<Partial<UserInfoType>>({})
+export const useUserStore = defineStore('user', () => {
+  const userInfo = ref<Partial<UserInfoType>>({})
   const isSign = ref(false)
 
   let localUserInfo = {}
-  try{
+  try {
     localUserInfo = JSON.parse(localStorage.getItem('USER_INFO') || '{}')
-
-  }catch (error){
+  } catch (error) {
     localUserInfo = {}
   }
 
-  //从local读取
-
-  if(!Object.keys(userInfo.value).length && Object.keys(localUserInfo).length){
+  // 从 local读取
+  if (!Object.keys(userInfo.value).length && Object.keys(localUserInfo).length) {
     userInfo.value = localUserInfo
   }
 
@@ -27,9 +24,14 @@ export const useUserStore = defineStore('user',()=>{
       .getUserDetail()
       .send()
       .then((data) => {
-        userInfo.value = {...userInfo.value, ...data}
+        userInfo.value = { ...userInfo.value, ...data }
+      })
+      .catch(() => {
+        // 删除缓存
+        localStorage.removeItem('TOKEN')
+        localStorage.removeItem('USER_INFO')
       })
   }
 
-  return {userInfo,isSign,getUserDetailAction}
+  return { userInfo, isSign, getUserDetailAction }
 })

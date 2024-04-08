@@ -1,4 +1,5 @@
 /// <reference types="vite/client" />
+
 interface ImportMetaEnv {
   /** API 前缀 */
   readonly VITE_API_PREFIX: string

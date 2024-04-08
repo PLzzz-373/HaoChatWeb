@@ -3,31 +3,31 @@
 @import '@/assets/iconfont/index-color.css';
 
 #app {
-    min-height: 100vh;
-    font-weight: normal;
+  min-height: 100vh;
+  font-weight: normal;
 }
 
 /* width */
 ::-webkit-scrollbar {
-    width: 4px;
+  width: 4px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-    background: transparent;
+  background: transparent;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background-color: var(--font-gray);
-    border-radius: 2px;
+  background-color: var(--font-gray);
+  border-radius: 2px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--hover-bg-1);
+  background: var(--hover-bg-1);
 }
 
 [hidden] {
-    display: none !important;
+  display: none !important;
 }

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { ref } from 'vue'
 
 interface Props {
@@ -27,12 +27,12 @@ const hasError = ref(false)
 
 <template>
   <div
-    :class="['avatar',`avatar-${shape}`,{downline: !online}]"
-    :style="{width: size + 'px', height: size + 'px'}"
+    :class="['avatar', `avatar-${shape}`, { downline: !online }]"
+    :style="{ width: size + 'px', height: size + 'px' }"
   >
     <template v-if="src">
-      <Icon v-if="hasError" icon="avatar" :size="size"/>
-      <img v-else :src="src" alt="avatar" @error="hasError = true"/>
+      <Icon v-if="hasError" icon="avatar" :size="size" />
+      <img v-else :src="src" alt="avatar" @error="hasError = true" />
     </template>
     <slot v-else>
       <Icon icon="avatar" :size="size" />
@@ -41,6 +41,4 @@ const hasError = ref(false)
   </div>
 </template>
 
-<style lang="scss" src="./styles.scss"  scoped>
-
-</style>
+<style lang="scss" src="./styles.scss" scoped />

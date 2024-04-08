@@ -1,13 +1,14 @@
 import { defineStore } from 'pinia'
-import { useChatStore } from '@/stores/chat'
-import { reactive, ref, watch } from 'vue'
-import type { ContactItem, RequestFriendItem } from '@/services/types'
+import { ref, reactive, watch } from 'vue'
 import { RoomTypeEnum } from '@/enums'
+import { useChatStore } from '@/stores/chat'
+import type { ContactItem, RequestFriendItem } from '@/services/types'
+import { clearQueue, readCountQueue } from '@/utils/readCountQueue'
+import apis from '@/services/apis'
 
-
-export const useGlobalStore = defineStore('global',()=>{
+export const useGlobalStore = defineStore('global', () => {
   const chatStore = useChatStore()
-  const unReadMark = reactive<{newFriendUnreadCount: number;newMsgUnreadCount: number }>({
+  const unReadMark = reactive<{ newFriendUnreadCount: number; newMsgUnreadCount: number }>({
     newFriendUnreadCount: 0,
     newMsgUnreadCount: 0,
   })
@@ -35,6 +36,19 @@ export const useGlobalStore = defineStore('global',()=>{
     isInvite: false,
     selectedUid: [],
   })
+
+  // 切换会话的时候重置消息已读数查询
+  watch(currentSession, (val) => {
+    // 清理已读数查询
+    clearQueue()
+    setTimeout(readCountQueue, 1000)
+    // 标记房间最新消息已读
+    apis.markMsgRead({ roomId: val.roomId }).send()
+    const unreadCount = chatStore.markSessionRead(val.roomId)
+    const resultCount = unReadMark.newMsgUnreadCount - unreadCount
+    unReadMark.newMsgUnreadCount = resultCount > 0 ? resultCount : 0
+  })
+
   return {
     unReadMark,
     currentSession,

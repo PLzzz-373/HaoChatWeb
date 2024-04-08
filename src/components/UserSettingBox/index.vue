@@ -1,28 +1,28 @@
 <script setup lang="ts">
-import { judgeClient } from '@/utils/detectDevice'
 import { computed, reactive, watchEffect } from 'vue'
+import { useRequest } from 'alova'
+import { ElMessage } from 'element-plus'
+import { Select, CloseBold, EditPen } from '@element-plus/icons-vue'
 import { useUserStore } from '@/stores/user'
 import { useCachedStore } from '@/stores/cached'
-import { useRequest } from 'alova'
-import apis from '@/services/apis'
-import { IsYetEnum, SexEnum } from '@/enums'
-import { CloseBold, EditPen, Select } from '@element-plus/icons-vue'
-import { ElMessage } from 'element-plus'
+import { SexEnum, IsYetEnum } from '@/enums'
 import type { BadgeType } from '@/services/types'
-import wsIns from '@/utils/websocket'
+import apis from '@/services/apis'
+import { judgeClient } from '@/utils/detectDevice'
 import { WsRequestMsgType } from '@/utils/wsType'
-
+import wsIns from '@/utils/websocket'
 const client = judgeClient()
+
 const props = defineProps(['modelValue'])
 const emit = defineEmits(['update:modelValue'])
 
 const value = computed({
-  get(){
+  get() {
     return props.modelValue
   },
-  set(value){
-    emit('update:modelValue',value)
-  }
+  set(value) {
+    emit('update:modelValue', value)
+  },
 })
 
 const editName = reactive({
@@ -33,11 +33,13 @@ const editName = reactive({
 
 const userStore = useUserStore()
 const cachedStore = useCachedStore()
+
+const userInfo = computed(() => userStore.userInfo)
 const { send: handlerGetBadgeList, data: badgeList } = useRequest(apis.getBadgeList, {
   initialData: [],
   immediate: false,
 })
-const userInfo = computed(() => userStore.userInfo)
+
 watchEffect(() => {
   if (value.value) {
     handlerGetBadgeList()
@@ -100,8 +102,8 @@ const onCancelEditName = async () => {
   editName.isEdit = false
   editName.tempName = ''
 }
-//退出登录
 const logout = ()=>{
+  console.log(1)
   localStorage.removeItem('TOKEN')
   wsIns.send({type: WsRequestMsgType.LOGOUT})
   location.reload()
@@ -141,6 +143,7 @@ const logout = ()=>{
           <IEpMale v-if="userInfo.sex === SexEnum.REMALE" />
         </el-icon>
       </div>
+
       <div class="setting-name">
         <div class="name-edit-wrapper" v-show="editName.isEdit === false">
           <span class="user-name">
@@ -168,10 +171,8 @@ const logout = ()=>{
               @click="onEditName"
             />
           </el-tooltip>
-          <el-tooltip :content="`退出登录`" placement="top-end"
-                      @click="logout"
-          >
-            <el-button >
+          <el-tooltip :content="`退出登录`" placement="top-end" >
+            <el-button @click="logout">
               退出
             </el-button>
           </el-tooltip>
@@ -196,12 +197,14 @@ const logout = ()=>{
           />
         </div>
       </div>
+
       <el-alert
         class="setting-tips"
         title="Tips: HaoChat名称不允许重复，快来抢占"
         type="warning"
         :closable="false"
       />
+
       <ul class="badge-list">
         <li class="badge-item" v-for="badge of badgeList" :key="badge.id">
           <img
@@ -231,6 +234,4 @@ const logout = ()=>{
   </ElDialog>
 </template>
 
-<style scoped>
-
-</style>
+<style lang="scss" src="./styles.scss" scoped />
