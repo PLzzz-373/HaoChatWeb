@@ -1,4 +1,8 @@
 import viteImagemin from 'vite-plugin-imagemin'
+
+/**
+ * 图片压缩
+ */
 export default function configImageminPlugin() {
   const imageminPlugin = viteImagemin({
     gifsicle: {
