@@ -141,7 +141,7 @@ onUnmounted(() => {
       <RouterView />
     </div>
     <footer class="footer">
-      <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">闽ICP备2023004110号</a>
+      <a href="https://github.com/PLzzz-373/HaoChatWeb" target="_blank" rel="noopener">gugugu</a>
     </footer>
     <el-image-viewer
       v-if="imageStore.isShowing"
